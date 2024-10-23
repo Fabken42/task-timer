@@ -1,0 +1,1 @@
+//preload para o main.js (electron)
