@@ -7,6 +7,7 @@ const initialState = {
         { position: 2, name: 'Tarefa 2', duration: '30', objective: 'Objetivo 2', concluido: false },
         { position: 3, name: 'Tarefa 3', duration: '30', objective: 'Objetivo 3', concluido: false },
     ],
+    currentTaskIndex: 0,
 };
 
 const taskSlice = createSlice({
@@ -30,8 +31,6 @@ const taskSlice = createSlice({
                 .map(task => (task.position > position ? { ...task, position: task.position - 1 } : task));
         },
         moveTask: (state, action) => {
-            console.log('movendo task');
-
             const { fromIndex, toIndex } = action.payload;
             const [movedTask] = state.tasks.splice(fromIndex, 1);
             state.tasks.splice(toIndex, 0, movedTask);
@@ -49,13 +48,11 @@ const taskSlice = createSlice({
             const task = state.tasks.find(task => task.position === position);
             if (task) task.concluido = !task.concluido;
         },
-        togglePendencia: (state, action) => {
-            const position = action.payload;
-            const task = state.tasks.find(task => task.position === position);
-            if (task) task.concluido = false;
-        },
+        setCurrentTaskIndex: (state, action) => {
+            state.currentTaskIndex = action.payload;
+        }
     },
 });
 
-export const { addTask, removeTask, moveTask, editTask, toggleConcluido, togglePendencia } = taskSlice.actions;
+export const { addTask, removeTask, moveTask, editTask, toggleConcluido, togglePendencia, setCurrentTaskIndex } = taskSlice.actions;
 export default taskSlice.reducer;

@@ -1,0 +1,11 @@
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+
+.row-concluido td {
+    background-color: #82E0AA !important;
+}
+
+.row-pendente td {
+    background-color: #FFD966 !important;
+}

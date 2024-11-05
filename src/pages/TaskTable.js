@@ -4,13 +4,14 @@ import { Button, Form, Table } from 'react-bootstrap';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTask, removeTask, moveTask, editTask, toggleConcluido, togglePendencia } from '../redux/taskSlice.js';
+import { addTask, removeTask, moveTask, editTask, toggleConcluido } from '../redux/taskSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCheck, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import '../styles/TaskTable.css'; // Importa o arquivo CSS para estilos personalizados
 
 const ITEM_TYPE = 'TASK';
 
-function DraggableRow({ row, index, moveRow }) { 
+function DraggableRow({ row, index, moveRow }) {
   const [, ref] = useDrag({
     type: ITEM_TYPE,
     item: { index },
@@ -26,8 +27,10 @@ function DraggableRow({ row, index, moveRow }) {
     },
   });
 
+  const rowClass = row.original.concluido ? 'row-concluido' : 'row-pendente';
+
   return (
-    <tr ref={(node) => ref(drop(node))} {...row.getRowProps()}>
+    <tr ref={(node) => ref(drop(node))} {...row.getRowProps()} className={rowClass}>
       {row.cells.map((cell) => (
         <td key={cell.column.id} {...cell.getCellProps()}>{cell.render('Cell')}</td>
       ))}
@@ -55,7 +58,6 @@ function EditableCell({ value: initialValue, row: { original }, column: { id }, 
   );
 }
 
-
 export default function TaskTable() {
   const tasks = useSelector((state) => state.tasks.tasks);
   const dispatch = useDispatch();
@@ -63,7 +65,6 @@ export default function TaskTable() {
   const handleAddTask = () => dispatch(addTask());
   const handleRemoveTask = (position) => dispatch(removeTask(position));
   const handleConcluido = (position) => dispatch(toggleConcluido(position));
-  const handlePendencia = (position) => dispatch(togglePendencia(position));
   const moveRow = (fromIndex, toIndex) => dispatch(moveTask({ fromIndex, toIndex }));
 
   const handleEditChange = useCallback((position, key, value) => {
@@ -79,9 +80,16 @@ export default function TaskTable() {
       {
         Header: 'Ações',
         Cell: ({ row }) => (
-          <Button variant="danger" size="sm" onClick={() => handleRemoveTask(row.original.position)}>
-            Remover
-          </Button>
+          <>
+            <Button variant="danger" size="sm" onClick={() => handleRemoveTask(row.original.position)}>
+              <FontAwesomeIcon icon={faTrash} />
+            </Button>{' '}
+            <Button variant={row.original.concluido ? 'warning' : 'success'} size="sm" onClick={() => handleConcluido(row.original.position)}>
+              <span style={{ display: 'inline-block', width: '12px', height: '12px', textAlign: 'center' }}>
+                <FontAwesomeIcon icon={row.original.concluido ? faExclamation : faCheck} />
+              </span>
+            </Button>{' '}
+          </>
         ),
       },
     ],
@@ -90,13 +98,12 @@ export default function TaskTable() {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: tasks || [] });
 
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container">
         <h2 className="my-4">Tabela de Tarefas</h2>
         <Button className="mb-4" onClick={handleAddTask}>Adicionar Tarefa</Button>
-        <Table {...getTableProps()} striped bordered hover>
+        <Table {...getTableProps()} bordered hover>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
