@@ -3,9 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     tasks: [
-        { position: 1, name: 'Tarefa 1', duration: '30', objective: 'Objetivo 1', concluido: false },
-        { position: 2, name: 'Tarefa 2', duration: '30', objective: 'Objetivo 2', concluido: false },
-        { position: 3, name: 'Tarefa 3', duration: '30', objective: 'Objetivo 3', concluido: false },
+        { position: 1, name: `Tarefa 1`, duration: '30', objective: `Objetivo 1`, concluido: false },
+        { position: 2, name: `Tarefa 2`, duration: '30', objective: `Objetivo 2`, concluido: false },
     ],
     currentTaskIndex: 0,
 };

@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+body {
+    background-color: #f7f7f7;
+    /* Cinza claro */
+    font-family: 'Nunito', sans-serif;
+    color: #333;
+    /* Cor do texto */
+    margin: 0;
+    padding: 0;
+}
+
+.content{
+    min-height: calc(100vh - 187px);
+}
+
+header {
+    background-color: #f9f9f9;
+    /* Cinza claro */
+    border-bottom: 2px solid #e0e0e0;
+    /* Linha de separação */
+}
+
+.title{
+    letter-spacing: 2px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.site-description{
+    font-family: 'Poppins', sans-serif;
+}
+
+footer {
+    background-color: #333;
+    color: #ddd;
+}
+
+
+footer .gap-3>* {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.social-media-icon{
+    transition: all ease-in-out .2s;
+}
+
+.social-media-icon:hover{
+    color: rgb(219, 219, 219);
+    transform: scale(1.1);
+}

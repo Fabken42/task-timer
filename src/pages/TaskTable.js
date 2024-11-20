@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTable } from 'react-table';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Container, Form, Table } from 'react-bootstrap';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTask, removeTask, moveTask, editTask, toggleConcluido } from '../redux/taskSlice.js';
+import { addTask, removeTask, moveTask, editTask, toggleConcluido, setCurrentTaskIndex } from '../redux/taskSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faCheck, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCheck, faExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../styles/TaskTable.css'; // Importa o arquivo CSS para estilos personalizados
 
 const ITEM_TYPE = 'TASK';
 
-function DraggableRow({ row, index, moveRow }) {
+function DraggableRow({ row, index, moveRow, handleRowClick }) {
   const [, ref] = useDrag({
     type: ITEM_TYPE,
     item: { index },
@@ -30,10 +30,24 @@ function DraggableRow({ row, index, moveRow }) {
   const rowClass = row.original.concluido ? 'row-concluido' : 'row-pendente';
 
   return (
-    <tr ref={(node) => ref(drop(node))} {...row.getRowProps()} className={rowClass}>
-      {row.cells.map((cell) => (
-        <td key={cell.column.id} {...cell.getCellProps()}>{cell.render('Cell')}</td>
-      ))}
+    <tr
+      ref={(node) => ref(drop(node))}
+      {...row.getRowProps()}
+      className={rowClass}
+    >
+      {row.cells.map((cell) => {
+        const isPositionColumn = cell.column.id === 'position';
+        return (
+          <td
+            key={cell.column.id}
+            {...cell.getCellProps()}
+            className={cell.column.id === 'position' ? 'cell-position' : ''}
+            onClick={isPositionColumn ? () => handleRowClick(index) : undefined}
+          >
+            {cell.render('Cell')}
+          </td>
+        );
+      })}
     </tr>
   );
 }
@@ -45,7 +59,18 @@ function EditableCell({ value: initialValue, row: { original }, column: { id }, 
     setValue(initialValue);
   }, [initialValue]);
 
-  const onChange = (e) => setValue(e.target.value);
+  const onChange = (e) => {
+    const newValue = e.target.value;
+  
+    if (
+      (id === 'name' && newValue.length <= 30) ||
+      (id === 'objective' && newValue.length <= 100) ||
+      (id === 'duration' && !isNaN(newValue) && newValue >= 0 && newValue <= 999) // Limitar de 0 a 999
+    ) {
+      setValue(newValue);
+    }
+  };  
+
   const onBlur = () => handleEditChange(original.position, id, value);
 
   return (
@@ -71,25 +96,30 @@ export default function TaskTable() {
     dispatch(editTask({ position, key, value }));
   }, [dispatch]);
 
+  const handleRowClick = (index) => {
+    dispatch(setCurrentTaskIndex(index)); 
+  };
+
   const columns = useMemo(
     () => [
-      { Header: 'Posição', accessor: 'position' },
+      { Header: ' ', accessor: 'position' },
       { Header: 'Nome', accessor: 'name', Cell: ({ value, row, column }) => <EditableCell value={value} row={row} column={column} handleEditChange={handleEditChange} /> },
-      { Header: 'Duração (min)', accessor: 'duration', Cell: ({ value, row, column }) => <EditableCell value={value} row={row} column={column} handleEditChange={handleEditChange} /> },
       { Header: 'Objetivo', accessor: 'objective', Cell: ({ value, row, column }) => <EditableCell value={value} row={row} column={column} handleEditChange={handleEditChange} /> },
+      { Header: 'Duração (min)', accessor: 'duration', Cell: ({ value, row, column }) => <EditableCell value={value} row={row} column={column} handleEditChange={handleEditChange} /> },
+
       {
         Header: 'Ações',
         Cell: ({ row }) => (
           <>
-            <Button variant="danger" size="sm" onClick={() => handleRemoveTask(row.original.position)}>
+            <Button variant="danger" title="Excluir" className='rounded-circle' size="sm" onClick={() => handleRemoveTask(row.original.position)}>
               <FontAwesomeIcon icon={faTrash} />
             </Button>{' '}
-            <Button variant={row.original.concluido ? 'warning' : 'success'} size="sm" onClick={() => handleConcluido(row.original.position)}>
+            <Button className='rounded-circle' title={row.original.concluido? 'Concluído':'Pendente'} variant={row.original.concluido ? 'success' : 'warning'} size="sm" onClick={() => handleConcluido(row.original.position)}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', textAlign: 'center' }}>
-                <FontAwesomeIcon icon={row.original.concluido ? faExclamation : faCheck} />
+                <FontAwesomeIcon icon={row.original.concluido ? faCheck : faExclamation} />
               </span>
             </Button>{' '}
-          </>
+          </> 
         ),
       },
     ],
@@ -100,9 +130,7 @@ export default function TaskTable() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="container">
-        <h2 className="my-4">Tabela de Tarefas</h2>
-        <Button className="mb-4" onClick={handleAddTask}>Adicionar Tarefa</Button>
+      <Container fluid className="p-5 text-center">
         <Table {...getTableProps()} bordered hover>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -116,11 +144,22 @@ export default function TaskTable() {
           <tbody {...getTableBodyProps()}>
             {rows.map((row, index) => {
               prepareRow(row);
-              return <DraggableRow key={row.id} row={row} index={index} moveRow={moveRow} />;
+              return (
+                <DraggableRow
+                  key={row.id}
+                  row={row}
+                  index={index}
+                  moveRow={moveRow}
+                  handleRowClick={handleRowClick}
+                />
+              );
             })}
           </tbody>
         </Table>
-      </div>
+        <div className="text-center" title='Adicionar linha'>
+          <FontAwesomeIcon className='add-task-icon' icon={faPlus} onClick={handleAddTask} />
+        </div>
+      </Container>
     </DndProvider>
   );
 }

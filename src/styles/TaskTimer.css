@@ -1,32 +1,74 @@
 /* TaskTimer.css */
 
 .task-timer-container {
+    position: relative;
     text-align: center;
-    padding: 20px;
     background-color: #f8f9fa;
+    border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     margin: auto;
 }
 
+.task-timer-container.concluido {
+    background-color: #a4e2bc;
+    /* Verde claro para tarefas concluídas */
+}
+
+.task-timer-container.pendente {
+    background-color: #ffe6be;
+    /* Amarelo claro para tarefas pendentes */
+}
+
+
 .task-title {
-    font-size: 1.5rem;
+    font-size: 1.8em;
     font-weight: bold;
-    margin-bottom: 5px;
+    word-break: break-word;
+    /* Permite quebra de palavras longas */
+    overflow-wrap: break-word;
+    /* Compatibilidade com navegadores antigos */
+    text-align: center;
+    /* Opcional: centraliza o texto */
+    margin-bottom: 10px;
+    /* Ajusta o espaçamento inferior */
 }
 
 .task-objective {
-    font-size: 1.1rem;
-    color: #6c757d;
-    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #525252;
+    word-break: break-word;
+    /* Permite quebra de palavras longas */
+    overflow-wrap: break-word;
+    /* Compatibilidade com navegadores antigos */
+    text-align: center;
+    /* Justifica o texto para melhor leitura */
+    margin-bottom: 10px;
+    /* Ajusta o espaçamento inferior */
 }
 
 .time-display {
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: bold;
-    color: #17a2b8;
+    color: rgb(255, 255, 255);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
+}
+
+
+.btn {
+    margin: 0 3px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.95);
 }
 
 .control-buttons {
@@ -36,12 +78,50 @@
 }
 
 .audio-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     cursor: pointer;
     font-size: 1.5rem;
-    color: #007bff;
-    margin-top: 20px;
+    color: #494949;
+    transition: all ease-in-out .2s;
+}
+
+.audio-icon:hover {
+    transform: scale(1.1);
+    color: #1b1b1b;
 }
 
 .volume-slider {
-    margin-top: 10px;
+    accent-color: #17a2b8;
+}
+
+input[type="range"].volume-slider {
+    -webkit-appearance: none; /* Remove estilo padrão em navegadores baseados em WebKit */
+    appearance: none;
+    width: 100%; /* Largura do slider */
+    height: 25px; /* Altura da trilha */
+    background: #ddd; /* Cor da trilha */
+    outline: none;
+    border-radius: 50px;
+}
+
+input[type="range"].volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; /* Tamanho da bola */
+    height: 16px;
+    background: #007bff; /* Cor da bola */
+    border-radius: 50%; /* Faz o thumb ser redondo */
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+input[type="range"].volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #ddd;
 }

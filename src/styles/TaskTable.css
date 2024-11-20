@@ -1,11 +1,35 @@
-.table-hover tbody tr:hover {
+.table-hover tbody tr td.cell-position:hover {
     cursor: pointer;
 }
 
 .row-concluido td {
-    background-color: #82E0AA !important;
+    background-color: #D4EFDF !important;
+}
+.row-concluido td:first-child {
+    border-left: 3px solid #27AE60 !important;
 }
 
 .row-pendente td {
-    background-color: #FFD966 !important;
+    background-color: #FEF5E7 !important;
+}
+.row-pendente td:first-child {
+    border-left: 3px solid #F4D03F !important;
+}
+
+.add-task-icon {
+    color: #007ce9;
+    font-size: 1.6em;
+    cursor: pointer;
+    display: inline-block;
+    border: 2px solid #eee;
+    border-radius: 50%;
+    padding: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-task-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    color: #0066c0;
 }
