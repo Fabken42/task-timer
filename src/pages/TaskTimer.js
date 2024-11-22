@@ -46,6 +46,19 @@ export default function TaskTimer() {
     }, [isRunning, timeLeft]);
 
     useEffect(() => {
+        if (timeLeft > 0 && task) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = String(timeLeft % 60).padStart(2, '0');
+            document.title = `${minutes}:${seconds} - Task Timer`;
+        } else if (timeLeft <= 0 && task) {
+            document.title = `Tempo esgotado - Task Timer`;
+        } else {
+            document.title = 'Task Timer';
+        }
+    }, [timeLeft, task]);
+    
+
+    useEffect(() => {
         if (backgroundAudio) backgroundAudio.stop();
 
         backgroundAudio = new Howl({
@@ -188,12 +201,13 @@ export default function TaskTimer() {
                                 setBackgroundSound(selectedSound);
                                 playPreview(selectedSound);
                             }}>
+                                <option value=''>Nenhum</option>
                                 <option value="/audio/rain.mp3">Som de Chuva</option>
                                 <option value="/audio/conversa.mp3">Pessoas Conversando</option>
-                                <option value="/audio/lofi01.mp3">Jinsei - Lofium (lo-fi)</option>
-                                <option value="/audio/lofi02.mp3">Satisfying - FASSounds (lo-fi)</option>
-                                <option value="/audio/lofi03.mp3">Tasty - FASSounds (lo-fi)</option>
-                                <option value="/audio/lofi04.mp3">Good Night - FASSounds (lo-fi)</option>
+                                <option value="/audio/lofi01.mp3">Jinsei (lofi)</option>
+                                <option value="/audio/lofi02.mp3">Satisfying (lofi)</option>
+                                <option value="/audio/lofi03.mp3">Tasty (lofi)</option>
+                                <option value="/audio/lofi04.mp3">Good Night (lofi)</option>
                             </Form.Control>
                         </Form.Group>
 
@@ -205,11 +219,12 @@ export default function TaskTimer() {
                                 setEndSound(selectedSound);
                                 playPreview(selectedSound);
                             }}>
-                                <option value="/audio/bip01.mp3">Bip simples</option>
-                                <option value="/audio/bip02.mp3">Subiu de Nível</option>
-                                <option value="/audio/bip03.mp3">Bip de aviso</option>
-                                <option value="/audio/bip04.mp3">Som de alerta</option>
-                                <option value="/audio/bip05.mp3">Som de notificação</option>
+                                <option value="">Nenhum</option>
+                                <option value="/audio/bip01.mp3">Simples</option>
+                                <option value="/audio/bip02.mp3">Level Up</option>
+                                <option value="/audio/bip03.mp3">Perigo</option>
+                                <option value="/audio/bip04.mp3">Alerta</option>
+                                <option value="/audio/bip05.mp3">Notificação</option>
                             </Form.Control>
                         </Form.Group>
 
