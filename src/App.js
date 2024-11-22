@@ -10,7 +10,7 @@ export default function App() {
       <div className='content'>
         <Header />
         <TaskTimer />
-        <TaskTable />
+        <TaskTable /> 
       </div>
       <Footer />
     </>

@@ -14,7 +14,7 @@ const Header = () => (
                 <FontAwesomeIcon icon={faClock}  size="xs"/>
             </h1>
             <p className="text-muted site-description">
-                Organize suas tarefas e controle seu tempo para aumentar a produtividade.
+                Organize suas tarefas e controle seu tempo para aumentar a produtividade!
             </p>
         </Container>
     </header>

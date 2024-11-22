@@ -47,7 +47,7 @@ export default function TaskTimer() {
 
     useEffect(() => {
         if (backgroundAudio) backgroundAudio.stop();
- 
+
         backgroundAudio = new Howl({
             src: [backgroundSound],
             loop: true,
@@ -148,9 +148,10 @@ export default function TaskTimer() {
     };
 
     return (
-        <Container fluid title='Configurações' className={`text-center p-4 mt-5 task-timer-container ${task?.concluido ? 'concluido' : 'pendente'
+        <Container fluid className={`text-center p-4 mt-5 task-timer-container ${task?.concluido ? 'concluido' : 'pendente'
             }`}>
             <FontAwesomeIcon
+                title='Configurações'
                 icon={faCog}
                 className="audio-icon"
                 onClick={handleOpenAudioModal}
