@@ -57,25 +57,32 @@ export default function TaskTimer() {
         }
     }, [timeLeft, task]);
 
-
     useEffect(() => {
-        if (backgroundAudio) backgroundAudio.stop();
-
-        backgroundAudio = new Howl({
-            src: [backgroundSound],
-            loop: true,
-            volume,
-        });
-
-        if (isRunning) {
-            backgroundAudio.seek(backgroundAudioPosition).play();
+        if (backgroundAudio) {
+            backgroundAudio.stop();
+            backgroundAudio = null;
         }
-
+    
+        if (backgroundSound) { // Apenas inicializa se houver um som válido
+            backgroundAudio = new Howl({
+                src: [backgroundSound],
+                loop: true,
+                volume,
+            });
+    
+            if (isRunning) {
+                backgroundAudio.seek(backgroundAudioPosition || 0).play();
+            }
+        }
+    
         return () => {
-            if (backgroundAudio) backgroundAudio.stop();
+            if (backgroundAudio) {
+                backgroundAudio.stop();
+            }
         };
     }, [isRunning, backgroundSound, volume]);
 
+    
     const playPreview = (sound) => {
         if (previewAudio) previewAudio.stop();
 
@@ -95,14 +102,21 @@ export default function TaskTimer() {
 
     const handleTogglePause = () => {
         if (!task) return;
-        if (isRunning && backgroundAudio) {
-            backgroundAudioPosition = backgroundAudio.seek();
-            backgroundAudio.pause();
-        } else if (!isRunning && backgroundAudio) {
-            backgroundAudio.seek(backgroundAudioPosition).play();
+    
+        if (isRunning) {
+            if (backgroundAudio && backgroundAudio.playing()) {
+                backgroundAudioPosition = backgroundAudio.seek() || 0;
+                backgroundAudio.pause();
+            }
+        } else {
+            if (backgroundAudio) {
+                backgroundAudio.seek(backgroundAudioPosition || 0).play();
+            }
         }
+    
         dispatch(toggleIsRunning(!isRunning)); // Alterna o estado
     };
+     
 
     const handleNextTask = () => {
         if (backgroundAudio) {
