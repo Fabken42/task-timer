@@ -1,8 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
+*{
+    font-family: 'Poppins', sans-serif;
+    
+}
+
+.text-primary {
+    color: red !important; /* Substitua pelo tom de azul que desejar */
+}
+
+
+
 body {
-    background-color: #f7f7f7;
+    background-color: #778;
     /* Cinza claro */
     font-family: 'Nunito', sans-serif;
     color: #333;
@@ -10,30 +21,26 @@ body {
     margin: 0;
     padding: 0;
 }
-
+header{
+    /* background-color: #445 !important; */
+    background: linear-gradient(to bottom, #334, #778);
+    color: #eee;
+    padding: 8px;
+    text-align: center;
+    border:none
+}
 .content{
     min-height: calc(100vh - 187px);
 }
 
-header {
-    background-color: #f9f9f9;
-    /* Cinza claro */
-    border-bottom: 2px solid #e0e0e0;
-    /* Linha de separação */
-}
-
 .title{
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     font-weight: 700;
-    font-family: 'Poppins', sans-serif;
-}
+} 
 
-.site-description{
-    font-family: 'Poppins', sans-serif;
-}
 
 footer {
-    background-color: #333;
+    background: linear-gradient(to top, #334, #778);
     color: #ddd;
 }
 

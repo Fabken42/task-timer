@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 const AppFooter = () => (
-  <footer className="bg-dark text-light py-3">
+  <footer className="text-light py-2">
     <Container className="text-center">
       <p className="mb-3" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>
         Minhas redes:

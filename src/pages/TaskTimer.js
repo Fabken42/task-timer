@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentTaskIndex, toggleConcluido } from '../redux/taskSlice';
+import { setCurrentTaskIndex, toggleConcluido, toggleIsRunning } from '../redux/taskSlice';
 import { Howl } from 'howler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
@@ -15,12 +15,12 @@ const PREVIEW_DURATION = 5000;
 
 export default function TaskTimer() {
     const dispatch = useDispatch();
+    const isRunning = useSelector((state) => state.tasks.isRunning);
     const tasks = useSelector((state) => state.tasks.tasks);
     const currentTaskIndex = useSelector((state) => state.tasks.currentTaskIndex);
     const task = tasks[currentTaskIndex] || null;
 
     const [timeLeft, setTimeLeft] = useState(task ? Number(task.duration) * 60 : 0);
-    const [isRunning, setIsRunning] = useState(false);
     const [showAudioModal, setShowAudioModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [backgroundSound, setBackgroundSound] = useState('/audio/lofi01.mp3');
@@ -56,7 +56,7 @@ export default function TaskTimer() {
             document.title = 'Task Timer';
         }
     }, [timeLeft, task]);
-    
+
 
     useEffect(() => {
         if (backgroundAudio) backgroundAudio.stop();
@@ -95,15 +95,13 @@ export default function TaskTimer() {
 
     const handleTogglePause = () => {
         if (!task) return;
-        setIsRunning((prev) => {
-            if (prev && backgroundAudio) {
-                backgroundAudioPosition = backgroundAudio.seek();
-                backgroundAudio.pause();
-            } else if (!prev && backgroundAudio) {
-                backgroundAudio.seek(backgroundAudioPosition).play();
-            }
-            return !prev;
-        });
+        if (isRunning && backgroundAudio) {
+            backgroundAudioPosition = backgroundAudio.seek();
+            backgroundAudio.pause();
+        } else if (!isRunning && backgroundAudio) {
+            backgroundAudio.seek(backgroundAudioPosition).play();
+        }
+        dispatch(toggleIsRunning(!isRunning)); // Alterna o estado
     };
 
     const handleNextTask = () => {
@@ -126,7 +124,7 @@ export default function TaskTimer() {
             backgroundAudioPosition = backgroundAudio.seek();
             backgroundAudio.pause();
         }
-        setIsRunning(false);
+        dispatch(toggleIsRunning(false)); // Pausa o timer
         setShowAudioModal(true);
     };
 
@@ -157,7 +155,7 @@ export default function TaskTimer() {
         }
         backgroundAudioPosition = 0;
         setShowConfirmationModal(false);
-        setIsRunning(false);
+        dispatch(toggleIsRunning(false)); // Pausa o timer
     };
 
     return (
@@ -177,12 +175,12 @@ export default function TaskTimer() {
             </div>
             <Row className="control-buttons">
                 <Col xs={6}>
-                    <Button className='btn-lg w-100' variant={isRunning ? "warning" : "success"} onClick={handleTogglePause} disabled={!task}>
+                    <Button className={`btn-lg w-100 ${isRunning ? "btn-pausar" : "btn-comecar"}`} onClick={handleTogglePause} disabled={!task}>
                         {isRunning ? 'Pausar' : 'Começar'}
                     </Button>
                 </Col>
                 <Col xs={6}>
-                    <Button className='btn-lg w-100' variant="primary" onClick={handleNextTask}>Pular</Button>
+                    <Button className='btn-lg w-100 skip-btn' onClick={handleNextTask}>Pular</Button>
                 </Col>
             </Row>
 

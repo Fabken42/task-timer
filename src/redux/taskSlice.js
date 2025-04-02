@@ -7,12 +7,16 @@ const initialState = {
         { position: 2, name: `Tarefa 2`, duration: '30', objective: `Objetivo 2`, concluido: false },
     ],
     currentTaskIndex: 0,
+    isRunning: false,
 };
 
 const taskSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
+        toggleIsRunning: (state, action) => {
+            state.isRunning = action.payload;
+        },
         addTask: (state) => {
             const newPosition = state.tasks.length + 1;
             state.tasks.push({
@@ -53,5 +57,5 @@ const taskSlice = createSlice({
     },
 });
 
-export const { addTask, removeTask, moveTask, editTask, toggleConcluido, togglePendencia, setCurrentTaskIndex } = taskSlice.actions;
+export const { addTask, removeTask, moveTask, editTask, toggleConcluido, togglePendencia, setCurrentTaskIndex, toggleIsRunning } = taskSlice.actions;
 export default taskSlice.reducer;
